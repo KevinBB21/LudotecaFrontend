@@ -55,7 +55,7 @@ export class LoanEditComponent implements OnInit {
 
           if (this.game != null) {
               const gameFilter: Game[] = games.filter(
-                  (game) => game.id == this.data.loan.game.id
+                  (game) => game.title == this.data.loan.game.title
               );
               if (gameFilter != null) {
                   this.loan.game = gameFilter[0];
