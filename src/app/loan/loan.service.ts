@@ -16,21 +16,23 @@ export class LoanService {
 
     private baseUrl = 'http://localhost:8080/loan';
 
-     getLoans(pageable: Pageable, gameId?: number, clientId?: number, date?: Date): Observable<LoanPage> {
-            let url = this.baseUrl;
-            const params = [];
-            if (gameId) params.push(`gameId=${gameId}`);
-            if (clientId) params.push(`clientId=${clientId}`);
-            if (date) params.push('date',this.TypeDate(date));
-            if (params.length) url += '?' + params.join('&');
-            return this.http.post<LoanPage>(url, { pageable: pageable });
+    getLoans(pageable: Pageable, gameId?: number, clientId?: number, date?: Date): Observable<LoanPage> {
+        let url = this.baseUrl;
+        const params = [];
+        if (gameId) params.push(`gameId=${gameId}`);
+        if (clientId) params.push(`clientId=${clientId}`);
+        if (date) {
+            // Formatea la fecha a 'yyyy-MM-dd' antes de agregarla como parámetro
+            const formattedDate = this.TypeDate(date);
+            params.push(`date=${formattedDate}`);
         }
+        if (params.length) url += '?' + params.join('&');
+        return this.http.post<LoanPage>(url, { pageable: pageable });
+    }
 
         TypeDate(date: Date) : string { 
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0'); 
-            const year = date.getFullYear();
-            return `${year}-${month}-${day}`;
+            const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            return date.toLocaleDateString('en-CA', options);
         }
     
         saveLoan(loan: Loan): Observable<Loan> {
