@@ -13,14 +13,15 @@
 
         <mat-form-field>
             <mat-label>Título</mat-label>
-            <input type="text" matInput placeholder="Título del juego" [(ngModel)]="game.title" name="title" required>
+            <input type="text" matInput placeholder="Título del juego" [(ngModel)]="game.title" name="title" required (keydown)="preventSpaces($event)">
             <mat-error>El título no puede estar vacío</mat-error>
         </mat-form-field>
 
         <mat-form-field>
             <mat-label>Edad recomendada</mat-label>
-            <input type="number" matInput placeholder="Edad recomendada" [(ngModel)]="game.age" name="age" required>
-            <mat-error>La edad no puede estar vacía</mat-error>
+            <input type="number" matInput placeholder="Edad recomendada" [(ngModel)]="game.age" name="age" required min="0" (keydown)="preventSpaces($event)">
+            <mat-error *ngIf="game.age < 0">La edad no puede ser negativa</mat-error>
+            <mat-error *ngIf="!game.age">La edad no puede estar vacía</mat-error>
         </mat-form-field>
 
         <mat-form-field>

@@ -1,10 +1,5 @@
 <div class="container">
-    @if (loan.id) {
-        <h1>Modificar prestamo</h1>
-    } @else {
-        <h1>Crear prestamo</h1>
-    }
-
+    
     <form>
         <mat-form-field>
             <mat-label>Identificador</mat-label>
@@ -13,14 +8,18 @@
 
         <mat-form-field>
             <mat-label>Fecha inicial</mat-label>
-            <input type="text" matInput placeholder="Fecha inicial" [(ngModel)]="loan.fechainic" name="fechainic" required>
-            <mat-error>La fecha no puede estar vacia</mat-error>
+            <input matInput [matDatepicker]="pickerStart" [(ngModel)]="loan.fechainic" name="fechainic" required [readonly]="true">
+            <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+            <mat-datepicker #pickerStart></mat-datepicker>
+            <mat-error>La fecha inicial no puede estar vacía</mat-error>
         </mat-form-field>
 
         <mat-form-field>
             <mat-label>Fecha final</mat-label>
-            <input type="text" matInput placeholder="Fecha final" [(ngModel)]="loan.fechafin" name="fechafin" required>
-            <mat-error>La fecha no puede estar vacia</mat-error>
+            <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="loan.fechafin" name="fechafin" required [readonly]="true">
+            <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+            <mat-datepicker #pickerEnd></mat-datepicker>
+            <mat-error>La fecha final no puede estar vacía</mat-error>
         </mat-form-field>
 
         <mat-form-field>
@@ -34,7 +33,7 @@
         </mat-form-field>
 
         <mat-form-field>
-            <mat-label>Game</mat-label>
+            <mat-label>Juego</mat-label>
             <mat-select disableRipple [(ngModel)]="loan.game" name="game_id" required>
                 @for (game of game; track game.id) {
                     <mat-option [value]="game">{{game.title}}</mat-option>
@@ -44,8 +43,13 @@
         </mat-form-field>
     </form>
 
+   
     <div class="buttons">
         <button mat-stroked-button (click)="onClose()">Cerrar</button>
-        <button mat-flat-button color="primary" (click)="onSave()">Guardar</button>
+        <!-- Deshabilitar el botón si algún campo obligatorio no está completo -->
+        <button mat-flat-button color="primary" (click)="onSave()" 
+                [disabled]="!loan.fechainic || !loan.fechafin || !loan.client || !loan.game">
+            Guardar
+        </button>
     </div>
 </div>

@@ -11,12 +11,14 @@ import { Loan } from '../model/Loan';
 import { Game } from '../../game/model/Game';
 import { ClientService } from '../../client/client.service';
 import { GameService } from '../../game/game.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 
 @Component({
   selector: 'app-loan-edit',
   standalone: true,
-  imports: [MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, FormsModule, ReactiveFormsModule],
+  imports: [MatButtonModule,MatDatepickerModule, MatNativeDateModule,MatFormFieldModule, MatInputModule, MatSelectModule, FormsModule, ReactiveFormsModule],
   templateUrl: './loan-edit.component.html',
   styleUrl: './loan-edit.component.scss'
 })

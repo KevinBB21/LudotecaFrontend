@@ -62,6 +62,25 @@ export class GameEditComponent implements OnInit {
         });
     }
 
+    preventSpaces(event: KeyboardEvent): void {
+        const inputElement = event.target as HTMLInputElement;
+    
+        // Evitar espacios al principio
+        if (event.key === ' ' && (!inputElement.value || inputElement.selectionStart === 0)) {
+            event.preventDefault();
+        }
+    
+        // Evitar múltiples espacios consecutivos
+        if (event.key === ' ' && inputElement.selectionStart !== null) {
+            const currentValue = inputElement.value;
+            const cursorPosition = inputElement.selectionStart;
+    
+            if (currentValue[cursorPosition - 1] === ' ') {
+                event.preventDefault();
+            }
+        }
+    }
+
     onSave() {
         this.gameService.saveGame(this.game).subscribe((result) => {
             this.dialogRef.close();
