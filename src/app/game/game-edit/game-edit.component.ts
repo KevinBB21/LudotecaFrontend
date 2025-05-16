@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-game-edit',
@@ -23,6 +24,8 @@ export class GameEditComponent implements OnInit {
     game: Game = new Game();
     authors: Author[] = [];
     categories: Category[] = [];
+    errorMessage: string | null = null; // Variable para almacenar el mensaje de error
+
 
     constructor(
         public dialogRef: MatDialogRef<GameEditComponent>,
@@ -81,11 +84,29 @@ export class GameEditComponent implements OnInit {
         }
     }
 
-    onSave() {
-        this.gameService.saveGame(this.game).subscribe((result) => {
+   onSave() {
+    this.errorMessage = null; 
+    this.gameService.saveGame(this.game).subscribe({
+        next: () => {
             this.dialogRef.close();
-        });
-    }
+        },
+        error: (error: HttpErrorResponse) => {
+            if (error.status === 400) {
+                
+                if (typeof error.error === 'string') {
+                    this.errorMessage = error.error; 
+                } else if (error.error?.message) {
+                    this.errorMessage = error.error.message; 
+                } else {
+                    this.errorMessage = 'Ha ocurrido un error inesperado.';
+                }
+            } else if (error.status === 500) {
+                this.errorMessage = 'Falta la eleccion de un autor o un cliente para el juego.'; 
+                this.errorMessage = 'Ha ocurrido un error inesperado.';
+            }
+        }
+    });
+}
 
     onClose() {
         this.dialogRef.close();

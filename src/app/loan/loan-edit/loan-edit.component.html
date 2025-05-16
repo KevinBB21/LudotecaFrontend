@@ -46,7 +46,6 @@
    
     <div class="buttons">
         <button mat-stroked-button (click)="onClose()">Cerrar</button>
-        <!-- Deshabilitar el botón si algún campo obligatorio no está completo -->
         <button mat-flat-button color="primary" (click)="onSave()" 
                 [disabled]="!loan.fechainic || !loan.fechafin || !loan.client || !loan.game">
             Guardar

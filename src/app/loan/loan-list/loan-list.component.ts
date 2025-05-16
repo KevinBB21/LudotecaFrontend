@@ -51,7 +51,7 @@ export class LoanListComponent implements OnInit {
   clients: Client[] = [];
   filterGame: Game | null = new Game();
   filterClient: Client | null = new Client();
-  filterDate: Date | undefined = new Date();
+  filterDate: Date | undefined = undefined; // Cambiado a undefined
 
   constructor(private loanService: LoanService, public dialog: MatDialog, private gameService: GameService, private clientService: ClientService) {}
   @Input() loan: Loan = new Loan();

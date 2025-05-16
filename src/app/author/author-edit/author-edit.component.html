@@ -26,6 +26,9 @@
 
     <div class="buttons">
         <button mat-stroked-button (click)="onClose()">Cerrar</button>
-        <button mat-flat-button color="primary" (click)="onSave()">Guardar</button>
+        <button mat-flat-button color="primary" (click)="onSave()" 
+                [disabled]="!author.name || !author.nationality">
+            Guardar
+        </button>
     </div>
 </div>

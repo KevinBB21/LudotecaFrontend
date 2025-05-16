@@ -43,10 +43,18 @@
             </mat-select>
             <mat-error>El autor no puede estar vacío</mat-error>
         </mat-form-field>
+
+        <!-- Mostrar el mensaje de error si existe -->
+        <div  class="error-message">
+            {{ errorMessage }}
+        </div>
     </form>
 
     <div class="buttons">
         <button mat-stroked-button (click)="onClose()">Cerrar</button>
-        <button mat-flat-button color="primary" (click)="onSave()">Guardar</button>
+        <button mat-flat-button color="primary" (click)="onSave()" 
+                [disabled]="!game.title || !game.age || !game.category || !game.author">
+            Guardar
+        </button>
     </div>
 </div>
