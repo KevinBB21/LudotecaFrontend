@@ -98,11 +98,11 @@ export class GameEditComponent implements OnInit {
                 } else if (error.error?.message) {
                     this.errorMessage = error.error.message; 
                 } else {
-                    this.errorMessage = 'Ha ocurrido un error inesperado.';
+                    this.errorMessage = 'Falta la eleccion de un autor o un cliente para el juego.';
                 }
             } else if (error.status === 500) {
                 this.errorMessage = 'Falta la eleccion de un autor o un cliente para el juego.'; 
-                this.errorMessage = 'Ha ocurrido un error inesperado.';
+                
             }
         }
     });
