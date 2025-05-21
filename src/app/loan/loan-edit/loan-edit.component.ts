@@ -26,6 +26,8 @@ export class LoanEditComponent implements OnInit {
   loan: Loan = new Loan();
   client: Client[] = [];
   game: Game[] = [];
+  errorMessage: string | null = null; 
+
 
   constructor(
       public dialogRef: MatDialogRef<LoanEditComponent>,
@@ -66,11 +68,25 @@ export class LoanEditComponent implements OnInit {
       });
   }
 
-  onSave() {
-      this.loanService.saveLoan(this.loan).subscribe((result) => {
-          this.dialogRef.close();
+   onSave() {
+      this.errorMessage = null; // Reinicia el mensaje de error
+      this.loanService.saveLoan(this.loan).subscribe({
+          next: () => {
+              this.dialogRef.close();
+          },
+          error: (error) => {
+              // Si el backend manda { message: "texto" }
+              if (error.error?.message) {
+                  this.errorMessage = error.error.message;
+              } else if (typeof error.error === 'string') {
+                  this.errorMessage = error.error;
+              } else {
+                  this.errorMessage = 'No se pudo realizar la reserva. Inténtalo de nuevo.';
+              }
+          }
       });
   }
+
 
   onClose() {
       this.dialogRef.close();

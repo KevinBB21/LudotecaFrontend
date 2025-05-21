@@ -49,15 +49,22 @@ export class CategoryEditComponent implements OnInit {
 
     onSave() {
     this.errorMessage = null; // Reiniciar el mensaje de error antes de guardar
+
+    // Validar que el nombre no sea vacío ni solo espacios
+    if (!this.category.name || this.category.name.trim().length === 0) {
+        this.errorMessage = 'El nombre no puede estar vacío ni contener solo espacios.';
+        return;
+    }
+
     this.categoryService.saveCategory(this.category).subscribe({
         next: () => {
             this.dialogRef.close();
         },
         error: (error: HttpErrorResponse) => {
             if (error.status === 400) {
-                this.errorMessage = error.error; // Capturar el mensaje de error del backend (400)
+                this.errorMessage = error.error;
             } else if (error.status === 500) {
-                this.errorMessage = 'Error interno del servidor. Por favor, inténtelo más tarde.'; // Mensaje para 500
+                this.errorMessage = 'Error interno del servidor. Por favor, inténtelo más tarde.';
             } else {
                 this.errorMessage = 'Ha ocurrido un error inesperado.';
             }

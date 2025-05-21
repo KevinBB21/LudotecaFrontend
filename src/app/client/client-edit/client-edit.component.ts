@@ -15,25 +15,31 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './client-edit.component.scss'
 })
 export class ClientEditComponent {
-
   client: Client = new Client();
+  errorMessage: string | null = null; 
 
-    constructor(
-        public dialogRef: MatDialogRef<ClientEditComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: {client : Client},
-        private clientService: ClientService
-    ) {}
+  constructor(
+      public dialogRef: MatDialogRef<ClientEditComponent>,
+      @Inject(MAT_DIALOG_DATA) public data: {client : Client},
+      private clientService: ClientService
+  ) {}
 
-    ngOnInit(): void {
-      this.client = this.data.client ? Object.assign({}, this.data.client) : new Client();
+  ngOnInit(): void {
+    this.client = this.data.client ? Object.assign({}, this.data.client) : new Client();
+  }
+
+  onSave() {
+  this.errorMessage = null;
+  this.clientService.saveClient(this.client).subscribe({
+    next: () => {
+      this.dialogRef.close();
+    },
+    error: (err) => {
+      // Aquí capturas el mensaje concreto del backend (como JSON)
+      this.errorMessage = err.error?.message || 'Error al guardar el cliente';
     }
-
-    onSave() {
-        this.clientService.saveClient(this.client).subscribe(() => {
-            this.dialogRef.close();
-        });
-    }
-
+  });
+}
     preventSpaces(event: KeyboardEvent): void {
       const inputElement = event.target as HTMLInputElement;
   

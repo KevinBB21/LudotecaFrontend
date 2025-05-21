@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class AuthorEditComponent implements OnInit {
     author: Author = new Author();
+    errorMessage: string | null = null;
 
     constructor(
         public dialogRef: MatDialogRef<AuthorEditComponent>,
@@ -47,10 +48,22 @@ export class AuthorEditComponent implements OnInit {
     }
 
     onSave() {
-        this.authorService.saveAuthor(this.author).subscribe(() => {
+    this.errorMessage = null; // Reinicia el mensaje de error antes de guardar
+    this.authorService.saveAuthor(this.author).subscribe({
+        next: () => {
             this.dialogRef.close();
-        });
-    }
+        },
+        error: (error) => {
+            if (error.error?.message) {
+                this.errorMessage = error.error.message;
+            } else if (typeof error.error === 'string') {
+                this.errorMessage = error.error;
+            } else {
+                this.errorMessage = 'No se pudo guardar el autor. Inténtalo de nuevo.';
+            }
+        }
+    });
+}
 
     onClose() {
         this.dialogRef.close();
