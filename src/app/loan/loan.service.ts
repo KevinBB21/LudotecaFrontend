@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable} from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
 import { Loan } from './model/Loan';
@@ -22,14 +22,14 @@ export class LoanService {
         if (gameId) params.push(`gameId=${gameId}`);
         if (clientId) params.push(`clientId=${clientId}`);
         if (date) {
-            const formattedDate = this.TypeDate(date);
+            const formattedDate = this.typeDate(date);
             params.push(`date=${formattedDate}`);
         }
         if (params.length) url += '?' + params.join('&');
         return this.http.post<LoanPage>(url, { pageable: pageable });
     }
 
-    TypeDate(date: Date): string {
+    typeDate(date: Date): string {
         const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
         return date.toLocaleDateString('en-CA', options);
     }
@@ -43,9 +43,7 @@ export class LoanService {
     deleteLoan(idLoan: number): Observable<void> {
         return this.http.delete<void>(`${this.baseUrl}/${idLoan}`);
     }
-    getAllLoans(): Observable<Loan[]> {
-        return this.http.get<Loan[]>(this.baseUrl);
-    }
+    
 
 
 }
