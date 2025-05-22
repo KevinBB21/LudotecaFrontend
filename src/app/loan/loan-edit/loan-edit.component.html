@@ -9,7 +9,7 @@
             <mat-label>Cliente</mat-label>
             <mat-select disableRipple [(ngModel)]="loan.client" name="client_id" required>
                 @for (client of client; track client.id) {
-                    <mat-option [value]="client">{{client.name}}</mat-option>
+                <mat-option [value]="client">{{client.name}}</mat-option>
                 }
             </mat-select>
             <mat-error>El cliente no puede estar vacío</mat-error>
@@ -19,7 +19,7 @@
             <mat-label>Juego</mat-label>
             <mat-select disableRipple [(ngModel)]="loan.game" name="game_id" required>
                 @for (game of game; track game.id) {
-                    <mat-option [value]="game">{{game.title}}</mat-option>
+                <mat-option [value]="game">{{game.title}}</mat-option>
                 }
             </mat-select>
             <mat-error>El juego no puede estar vacío</mat-error>
@@ -27,7 +27,8 @@
 
         <mat-form-field>
             <mat-label>Fecha inicial</mat-label>
-            <input matInput [matDatepicker]="pickerStart" [(ngModel)]="loan.fechainic" name="fechainic" required [readonly]="true">
+            <input matInput [matDatepicker]="pickerStart" [(ngModel)]="loan.fechainic" name="fechainic" required
+                [readonly]="true">
             <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
             <mat-datepicker #pickerStart></mat-datepicker>
             <mat-error>La fecha inicial no puede estar vacía</mat-error>
@@ -35,7 +36,8 @@
 
         <mat-form-field>
             <mat-label>Fecha final</mat-label>
-            <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="loan.fechafin" name="fechafin" required [readonly]="true">
+            <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="loan.fechafin" name="fechafin" required
+                [readonly]="true">
             <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
             <mat-datepicker #pickerEnd></mat-datepicker>
             <mat-error>La fecha final no puede estar vacía</mat-error>
@@ -44,8 +46,8 @@
 
     <div class="buttons">
         <button mat-stroked-button (click)="onClose()">Cerrar</button>
-        <button mat-flat-button color="primary" (click)="onSave()" 
-                [disabled]="!loan.fechainic || !loan.fechafin || !loan.client || !loan.game">
+        <button mat-flat-button color="primary" (click)="onSave()"
+            [disabled]="!loan.fechainic || !loan.fechafin || !loan.client || !loan.game">
             Guardar
         </button>
     </div>

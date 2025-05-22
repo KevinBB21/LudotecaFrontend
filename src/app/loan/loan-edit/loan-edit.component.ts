@@ -16,79 +16,87 @@ import { MatNativeDateModule } from '@angular/material/core';
 
 
 @Component({
-  selector: 'app-loan-edit',
-  standalone: true,
-  imports: [MatButtonModule,MatDatepickerModule, MatNativeDateModule,MatFormFieldModule, MatInputModule, MatSelectModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './loan-edit.component.html',
-  styleUrl: './loan-edit.component.scss'
+    selector: 'app-loan-edit',
+    standalone: true,
+    imports: [MatButtonModule, MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, MatInputModule, MatSelectModule, FormsModule, ReactiveFormsModule],
+    templateUrl: './loan-edit.component.html',
+    styleUrl: './loan-edit.component.scss'
 })
 export class LoanEditComponent implements OnInit {
-  loan: Loan = new Loan();
-  client: Client[] = [];
-  game: Game[] = [];
-  errorMessage: string | null = null; 
+    loan: Loan = new Loan();
+    client: Client[] = [];
+    game: Game[] = [];
+    errorMessage: string | null = null;
 
 
-  constructor(
-      public dialogRef: MatDialogRef<LoanEditComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: any,
-      private loanService: LoanService,
-      private clientService: ClientService,
-      private gameService: GameService
-  ) {}
+    constructor(
+        public dialogRef: MatDialogRef<LoanEditComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        private loanService: LoanService,
+        private clientService: ClientService,
+        private gameService: GameService
+    ) { }
 
-  ngOnInit(): void {
-      this.loan = this.data.loan ? Object.assign({}, this.data.loan) : new Game();
-      this.loan = this.data.loan ? Object.assign({}, this.data.loan) : new Client();
+    ngOnInit(): void {
+        if (this.data.loan) {
+            this.loan = Object.assign({}, this.data.loan);
+        } else {
+            this.loan = {
+                id: undefined,
+                client: undefined,
+                game: undefined,
+                fechainic: undefined,
+                fechafin: undefined
+            } as unknown as Loan;
+        }
 
-      this.clientService.getAllClients().subscribe((clients) => {
-          this.client = clients;
+        this.clientService.getAllClients().subscribe((clients) => {
+            this.client = clients;
 
-          if (this.loan.client != null) {
-              const clientFilter: Client[] = clients.filter(
-                  (client) => client.id == this.data.loan.client.id
-              );
-              if (clientFilter != null) {
-                  this.loan.client = clientFilter[0];
-              }
-          }
-      });
+            if (this.loan.client != null) {
+                const clientFilter: Client[] = clients.filter(
+                    (client) => client.id == this.loan.client.id
+                );
+                if (clientFilter.length > 0) {
+                    this.loan.client = clientFilter[0];
+                }
+            }
+        });
 
-      this.gameService.getAllGames().subscribe((games) => {
-          this.game = games;
+        this.gameService.getAllGames().subscribe((games) => {
+            this.game = games;
 
-          if (this.game != null) {
-              const gameFilter: Game[] = games.filter(
-                  (game) => game.title == this.data.loan.game.title
-              );
-              if (gameFilter != null) {
-                  this.loan.game = gameFilter[0];
-              }
-          }
-      });
-  }
+            if (this.loan.game != null) {
+                const gameFilter: Game[] = games.filter(
+                    (game) => game.id == this.loan.game.id
+                );
+                if (gameFilter.length > 0) {
+                    this.loan.game = gameFilter[0];
+                }
+            }
+        });
+    }
 
-   onSave() {
-      this.errorMessage = null; // Reinicia el mensaje de error
-      this.loanService.saveLoan(this.loan).subscribe({
-          next: () => {
-              this.dialogRef.close();
-          },
-          error: (error) => {
-              // Si el backend manda { message: "texto" }
-              if (error.error?.message) {
-                  this.errorMessage = error.error.message;
-              } else if (typeof error.error === 'string') {
-                  this.errorMessage = error.error;
-              } else {
-                  this.errorMessage = 'No se pudo realizar la reserva. Inténtalo de nuevo.';
-              }
-          }
-      });
-  }
+    onSave() {
+        this.errorMessage = null; // Reinicia el mensaje de error
+        this.loanService.saveLoan(this.loan).subscribe({
+            next: () => {
+                this.dialogRef.close();
+            },
+            error: (error) => {
+                if (error.error?.message) {
+                    this.errorMessage = error.error.message;
+                } else if (typeof error.error === 'string') {
+                    this.errorMessage = error.error;
+                } else {
+                    this.errorMessage = 'No se pudo realizar la reserva. Inténtalo de nuevo.';
+                }
+            }
+        });
+    }
 
 
-  onClose() {
-      this.dialogRef.close();
-  }
+    onClose() {
+        this.dialogRef.close();
+    }
 }

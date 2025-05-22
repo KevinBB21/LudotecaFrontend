@@ -32,17 +32,18 @@ export class ClientListComponent {
 
     this.clientService.getClient().subscribe(
       client => this.dataSource.data = client
-  );}
+    );
+  }
 
-  createClient() {    
+  createClient() {
     const dialogRef = this.dialog.open(ClientEditComponent, {
       data: {}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       this.ngOnInit();
-    });    
-  }  
+    });
+  }
 
   editClient(client: Client) {
     const dialogRef = this.dialog.open(ClientEditComponent, {
@@ -54,7 +55,7 @@ export class ClientListComponent {
     });
   }
 
-  deleteClient(client: Client) {    
+  deleteClient(client: Client) {
     const dialogRef = this.dialog.open(DialogConfirmationComponent, {
       data: { title: "Eliminar categoría", description: "Atención si borra la categoría se perderán sus datos.<br> ¿Desea eliminar la categoría?" }
     });
@@ -63,7 +64,7 @@ export class ClientListComponent {
       if (result) {
         this.clientService.deleteClient(client.id).subscribe(result => {
           this.ngOnInit();
-        }); 
+        });
       }
     });
   }

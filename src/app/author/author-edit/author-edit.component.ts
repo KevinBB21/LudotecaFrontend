@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
     selector: 'app-author-edit',
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule ],
+    imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
     templateUrl: './author-edit.component.html',
     styleUrl: './author-edit.component.scss',
 })
@@ -22,7 +22,7 @@ export class AuthorEditComponent implements OnInit {
         public dialogRef: MatDialogRef<AuthorEditComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private authorService: AuthorService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.author = this.data.author ? Object.assign({}, this.data.author) : new Author();
@@ -30,17 +30,15 @@ export class AuthorEditComponent implements OnInit {
 
     preventSpaces(event: KeyboardEvent): void {
         const inputElement = event.target as HTMLInputElement;
-    
-        // Evitar espacios al principio
+
         if (event.key === ' ' && (!inputElement.value || inputElement.selectionStart === 0)) {
             event.preventDefault();
         }
-    
-        // Evitar múltiples espacios consecutivos
+
         if (event.key === ' ' && inputElement.selectionStart !== null) {
             const currentValue = inputElement.value;
             const cursorPosition = inputElement.selectionStart;
-    
+
             if (currentValue[cursorPosition - 1] === ' ') {
                 event.preventDefault();
             }
@@ -48,22 +46,22 @@ export class AuthorEditComponent implements OnInit {
     }
 
     onSave() {
-    this.errorMessage = null; // Reinicia el mensaje de error antes de guardar
-    this.authorService.saveAuthor(this.author).subscribe({
-        next: () => {
-            this.dialogRef.close();
-        },
-        error: (error) => {
-            if (error.error?.message) {
-                this.errorMessage = error.error.message;
-            } else if (typeof error.error === 'string') {
-                this.errorMessage = error.error;
-            } else {
-                this.errorMessage = 'No se pudo guardar el autor. Inténtalo de nuevo.';
+        this.errorMessage = null; // Reinicia el mensaje de error antes de guardar
+        this.authorService.saveAuthor(this.author).subscribe({
+            next: () => {
+                this.dialogRef.close();
+            },
+            error: (error) => {
+                if (error.error?.message) {
+                    this.errorMessage = error.error.message;
+                } else if (typeof error.error === 'string') {
+                    this.errorMessage = error.error;
+                } else {
+                    this.errorMessage = 'No se pudo guardar el autor. Inténtalo de nuevo.';
+                }
             }
-        }
-    });
-}
+        });
+    }
 
     onClose() {
         this.dialogRef.close();

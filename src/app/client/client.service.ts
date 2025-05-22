@@ -21,7 +21,6 @@ export class ClientService {
     const url = id ? `${this.baseUrl}/${id}` : this.baseUrl;
     return this.http.put<Client>(url, client).pipe(
       catchError(error => {
-        // Aquí propagas el error tal cual lo manda el backend
         return throwError(() => error);
       })
     );

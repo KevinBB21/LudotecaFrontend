@@ -1,8 +1,8 @@
 <div class="container">
     @if (client.id) {
-        <h1>Modificar cliente</h1>
+    <h1>Modificar cliente</h1>
     } @else {
-        <h1>Crear cliente</h1>
+    <h1>Crear cliente</h1>
     }
 
     <form>
@@ -13,19 +13,19 @@
 
         <mat-form-field>
             <mat-label>Nombre</mat-label>
-            <input type="text" matInput placeholder="Nombre de categoría" [(ngModel)]="client.name" name="name" required (keydown)="preventSpaces($event)">
+            <input type="text" matInput placeholder="Nombre de categoría" [(ngModel)]="client.name" name="name" required
+                (keydown)="preventSpaces($event)">
             <mat-error>El nombre no puede estar vacío</mat-error>
         </mat-form-field>
     </form>
 
     <div class="buttons">
         <button mat-stroked-button (click)="onClose()">Cerrar</button>
-        <button mat-flat-button color="primary" (click)="onSave()" 
-                [disabled]="!client.name">
+        <button mat-flat-button color="primary" (click)="onSave()" [disabled]="!client.name">
             Guardar
         </button>
     </div>
-    <div  style="color: red; margin-bottom: 10px;">
-  {{ errorMessage }}
-</div>
+    <div style="color: red; margin-bottom: 10px;">
+        {{ errorMessage }}
+    </div>
 </div>

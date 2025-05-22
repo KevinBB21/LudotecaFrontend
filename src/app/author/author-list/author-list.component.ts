@@ -16,7 +16,7 @@ import { DialogConfirmationComponent } from '../../core/dialog-confirmation/dial
 @Component({
     selector: 'app-author-list',
     standalone: true,
-    imports: [MatButtonModule, MatIconModule, MatTableModule, CommonModule,MatPaginator],
+    imports: [MatButtonModule, MatIconModule, MatTableModule, CommonModule, MatPaginator],
     templateUrl: './author-list.component.html',
     styleUrl: './author-list.component.scss',
 })
@@ -28,7 +28,7 @@ export class AuthorListComponent implements OnInit {
     dataSource = new MatTableDataSource<Author>();
     displayedColumns: string[] = ['id', 'name', 'nationality', 'action'];
 
-    constructor(private authorService: AuthorService, public dialog: MatDialog) {}
+    constructor(private authorService: AuthorService, public dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.loadPage();

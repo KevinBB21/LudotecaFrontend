@@ -9,7 +9,7 @@ import { Category } from './model/Category';
 })
 export class CategoryService {
 
-  constructor( private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   private baseUrl = 'http://localhost:8080/category' as const;
 
@@ -23,7 +23,7 @@ export class CategoryService {
     return this.http.put<Category>(url, category);
   }
 
-  deleteCategory(idCategory : number): Observable<any> {
+  deleteCategory(idCategory: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${idCategory}`);
-  }  
+  }
 }

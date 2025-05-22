@@ -5,4 +5,4 @@ export class AuthorPage {
     content: Author[] = [];
     pageable: Pageable = new Pageable();
     totalElements: number = 0;
-}
+} 

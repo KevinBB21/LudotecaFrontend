@@ -53,50 +53,49 @@ export class LoanListComponent implements OnInit {
   filterClient: Client | null = new Client();
   filterDate: Date | undefined = undefined; // Cambiado a undefined
 
-  constructor(private loanService: LoanService, public dialog: MatDialog, private gameService: GameService, private clientService: ClientService) {}
+  constructor(private loanService: LoanService, public dialog: MatDialog, private gameService: GameService, private clientService: ClientService) { }
   @Input() loan: Loan = new Loan();
 
   ngOnInit(): void {
-      this.loadPage();
-      this.gameService.getGames().subscribe(
-        games => { this.games = games }
-      )
-  
-      this.clientService.getClient().subscribe(
-        clients => { this.clients = clients }
-      );
-  
+    this.loadPage();
+    this.gameService.getGames().subscribe(
+      games => { this.games = games }
+    )
+
+    this.clientService.getClient().subscribe(
+      clients => { this.clients = clients }
+    );
+
+  }
+  loadPage(event?: PageEvent) {
+    const pageable: Pageable = {
+      pageNumber: this.pageNumber,
+      pageSize: this.pageSize,
+      sort: [
+        {
+          property: 'id',
+          direction: 'ASC',
+        },
+      ],
+    };
+
+    if (event != null) {
+      pageable.pageSize = event.pageSize;
+      pageable.pageNumber = event.pageIndex;
     }
-    loadPage(event?: PageEvent) {
-        const pageable: Pageable = {
-            pageNumber: this.pageNumber,
-            pageSize: this.pageSize,
-            sort: [
-                {
-                    property: 'id',
-                    direction: 'ASC',
-                },
-            ],
-        };
-    
-        if (event != null) {
-            pageable.pageSize = event.pageSize;
-            pageable.pageNumber = event.pageIndex;
-        }
-    
-        const gameId = this.filterGame != null ? this.filterGame.id : undefined;
-        const clientId = this.filterClient != null ? this.filterClient.id : undefined;
-    
-        // Pass the raw Date object or undefined
-        const date = this.filterDate || undefined;
-    
-        this.loanService.getLoans(pageable, gameId, clientId, date).subscribe((data) => {
-            this.dataSource.data = data.content;
-            this.pageNumber = data.pageable.pageNumber;
-            this.pageSize = data.pageable.pageSize;
-            this.totalElements = data.totalElements;
-        });
-    }
+
+    const gameId = this.filterGame != null ? this.filterGame.id : undefined;
+    const clientId = this.filterClient != null ? this.filterClient.id : undefined;
+
+    const date = this.filterDate || undefined;
+
+    this.loanService.getLoans(pageable, gameId, clientId, date).subscribe((data) => {
+      this.dataSource.data = data.content;
+      this.pageNumber = data.pageable.pageNumber;
+      this.pageSize = data.pageable.pageSize;
+      this.totalElements = data.totalElements;
+    });
+  }
   onCleanFilter(): void {
     this.filterGame = null;
     this.filterClient = null;
@@ -107,34 +106,34 @@ export class LoanListComponent implements OnInit {
 
   onSearch(): void {
     this.loadPage();
-   
+
   }
 
   createLoan() {
-      const dialogRef = this.dialog.open(LoanEditComponent, {
-          data: {},
-      });
+    const dialogRef = this.dialog.open(LoanEditComponent, {
+      data: {},
+    });
 
-      dialogRef.afterClosed().subscribe((result) => {
-          this.ngOnInit();
-      });
+    dialogRef.afterClosed().subscribe((result) => {
+      this.ngOnInit();
+    });
   }
 
   deleteLoan(loan: Loan) {
-      const dialogRef = this.dialog.open(DialogConfirmationComponent, {
-          data: {
-              title: 'Eliminar Prestamo',
-              description:
-                  'Atención usted va a borrar el prestamo.<br> ¿Desea eliminar el prestamo?',
-          },
-      });
+    const dialogRef = this.dialog.open(DialogConfirmationComponent, {
+      data: {
+        title: 'Eliminar Prestamo',
+        description:
+          'Atención usted va a borrar el prestamo.<br> ¿Desea eliminar el prestamo?',
+      },
+    });
 
-      dialogRef.afterClosed().subscribe((result) => {
-          if (result) {
-              this.loanService.deleteLoan(loan.id).subscribe((result) => {
-                  this.ngOnInit();
-              });
-          }
-      });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loanService.deleteLoan(loan.id).subscribe((result) => {
+          this.ngOnInit();
+        });
+      }
+    });
   }
 }

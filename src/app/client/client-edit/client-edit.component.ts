@@ -9,58 +9,55 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-client-edit',
-  imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule ],
+  imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   standalone: true,
   templateUrl: './client-edit.component.html',
   styleUrl: './client-edit.component.scss'
 })
 export class ClientEditComponent {
   client: Client = new Client();
-  errorMessage: string | null = null; 
+  errorMessage: string | null = null;
 
   constructor(
-      public dialogRef: MatDialogRef<ClientEditComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: {client : Client},
-      private clientService: ClientService
-  ) {}
+    public dialogRef: MatDialogRef<ClientEditComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { client: Client },
+    private clientService: ClientService
+  ) { }
 
   ngOnInit(): void {
     this.client = this.data.client ? Object.assign({}, this.data.client) : new Client();
   }
 
   onSave() {
-  this.errorMessage = null;
-  this.clientService.saveClient(this.client).subscribe({
-    next: () => {
-      this.dialogRef.close();
-    },
-    error: (err) => {
-      // Aquí capturas el mensaje concreto del backend (como JSON)
-      this.errorMessage = err.error?.message || 'Error al guardar el cliente';
+    this.errorMessage = null;
+    this.clientService.saveClient(this.client).subscribe({
+      next: () => {
+        this.dialogRef.close();
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Error al guardar el cliente';
+      }
+    });
+  }
+  preventSpaces(event: KeyboardEvent): void {
+    const inputElement = event.target as HTMLInputElement;
+
+    if (event.key === ' ' && (!inputElement.value || inputElement.selectionStart === 0)) {
+      event.preventDefault();
     }
-  });
-}
-    preventSpaces(event: KeyboardEvent): void {
-      const inputElement = event.target as HTMLInputElement;
-  
-      // Evitar espacios al principio
-      if (event.key === ' ' && (!inputElement.value || inputElement.selectionStart === 0)) {
-          event.preventDefault();
+
+    if (event.key === ' ' && inputElement.selectionStart !== null) {
+      const currentValue = inputElement.value;
+      const cursorPosition = inputElement.selectionStart;
+
+      if (currentValue[cursorPosition - 1] === ' ') {
+        event.preventDefault();
       }
-  
-      // Evitar múltiples espacios consecutivos
-      if (event.key === ' ' && inputElement.selectionStart !== null) {
-          const currentValue = inputElement.value;
-          const cursorPosition = inputElement.selectionStart;
-  
-          if (currentValue[cursorPosition - 1] === ' ') {
-              event.preventDefault();
-          }
-      }
+    }
   }
 
-    onClose() {
-        this.dialogRef.close();
-    }
+  onClose() {
+    this.dialogRef.close();
+  }
 
 }

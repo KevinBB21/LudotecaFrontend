@@ -22,7 +22,7 @@ export class CategoryEditComponent implements OnInit {
         public dialogRef: MatDialogRef<CategoryEditComponent>,
         @Inject(MAT_DIALOG_DATA) public data: { category: Category },
         private categoryService: CategoryService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.category = this.data.category ? Object.assign({}, this.data.category) : new Category();
@@ -31,12 +31,10 @@ export class CategoryEditComponent implements OnInit {
     preventSpaces(event: KeyboardEvent): void {
         const inputElement = event.target as HTMLInputElement;
 
-        // Evitar espacios al principio
         if (event.key === ' ' && (!inputElement.value || inputElement.selectionStart === 0)) {
             event.preventDefault();
         }
 
-        // Evitar múltiples espacios consecutivos
         if (event.key === ' ' && inputElement.selectionStart !== null) {
             const currentValue = inputElement.value;
             const cursorPosition = inputElement.selectionStart;
@@ -48,29 +46,28 @@ export class CategoryEditComponent implements OnInit {
     }
 
     onSave() {
-    this.errorMessage = null; // Reiniciar el mensaje de error antes de guardar
+        this.errorMessage = null; 
 
-    // Validar que el nombre no sea vacío ni solo espacios
-    if (!this.category.name || this.category.name.trim().length === 0) {
-        this.errorMessage = 'El nombre no puede estar vacío ni contener solo espacios.';
-        return;
-    }
-
-    this.categoryService.saveCategory(this.category).subscribe({
-        next: () => {
-            this.dialogRef.close();
-        },
-        error: (error: HttpErrorResponse) => {
-            if (error.status === 400) {
-                this.errorMessage = error.error;
-            } else if (error.status === 500) {
-                this.errorMessage = 'Error interno del servidor. Por favor, inténtelo más tarde.';
-            } else {
-                this.errorMessage = 'Ha ocurrido un error inesperado.';
-            }
+        if (!this.category.name || this.category.name.trim().length === 0) {
+            this.errorMessage = 'El nombre no puede estar vacío ni contener solo espacios.';
+            return;
         }
-    });
-}
+
+        this.categoryService.saveCategory(this.category).subscribe({
+            next: () => {
+                this.dialogRef.close();
+            },
+            error: (error: HttpErrorResponse) => {
+                if (error.status === 400) {
+                    this.errorMessage = error.error;
+                } else if (error.status === 500) {
+                    this.errorMessage = 'Error interno del servidor. Por favor, inténtelo más tarde.';
+                } else {
+                    this.errorMessage = 'Ha ocurrido un error inesperado.';
+                }
+            }
+        });
+    }
 
     onClose() {
         this.dialogRef.close();

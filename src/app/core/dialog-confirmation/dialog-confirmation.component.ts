@@ -16,7 +16,7 @@ export class DialogConfirmationComponent {
     constructor(
         public dialogRef: MatDialogRef<DialogConfirmationComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.title = this.data.title;
